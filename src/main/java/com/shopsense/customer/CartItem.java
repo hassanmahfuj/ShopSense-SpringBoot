@@ -8,13 +8,14 @@ public class CartItem {
 	String productThumbnailUrl;
 	double productUnitPrice;
 	int productQuantity;
+	double subTotal;
 
 	public CartItem() {
 		super();
 	}
 
 	public CartItem(int id, int customerId, int productId, String productName, String productThumbnailUrl,
-			double productUnitPrice, int productQuantity) {
+			double productUnitPrice, int productQuantity, double subTotal) {
 		super();
 		this.id = id;
 		this.customerId = customerId;
@@ -23,6 +24,7 @@ public class CartItem {
 		this.productThumbnailUrl = productThumbnailUrl;
 		this.productUnitPrice = productUnitPrice;
 		this.productQuantity = productQuantity;
+		this.subTotal = subTotal;
 	}
 
 	public int getId() {
@@ -79,5 +81,13 @@ public class CartItem {
 
 	public void setProductQuantity(int productQuantity) {
 		this.productQuantity = productQuantity;
+	}
+
+	public double getSubTotal() {
+		return subTotal;
+	}
+
+	public void setSubTotal(double subTotal) {
+		this.subTotal = subTotal;
 	}
 }

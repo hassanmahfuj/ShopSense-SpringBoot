@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,6 +48,12 @@ public class CustomerController {
 	public CartItem addToCart(@RequestBody CartItem a) {
 		CustomerDA d = new CustomerDA();
 		return d.addToCart(a);
+	}
+	
+	@PutMapping(value = "/customer/cart")
+	public boolean updateCart(@RequestBody CartItem a) {
+		CustomerDA d = new CustomerDA();
+		return d.updateCart(a);
 	}
 	
 	@DeleteMapping(value = "/customer/cart")

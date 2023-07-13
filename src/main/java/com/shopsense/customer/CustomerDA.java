@@ -107,13 +107,14 @@ public class CustomerDA {
 	public CartItem addToCart(CartItem a) {
 		try {
 			pst = db.get().prepareStatement(
-					"INSERT INTO carts (customer_id, product_id, product_name, product_thumbnail_url, product_unit_price, quantity) VALUES (?, ?, ?, ?, ?, ?)");
+					"INSERT INTO carts (customer_id, product_id, product_name, product_thumbnail_url, product_unit_price, quantity, sub_total) VALUES (?, ?, ?, ?, ?, ?, ?)");
 			pst.setInt(1, a.getCustomerId());
 			pst.setInt(2, a.getProductId());
 			pst.setString(3, a.getProductName());
 			pst.setString(4, a.getProductThumbnailUrl());
 			pst.setDouble(5, a.getProductUnitPrice());
 			pst.setInt(5, a.getProductQuantity());
+			pst.setDouble(6, a.getSubTotal());
 			int x = pst.executeUpdate();
 			if (x != -1) {
 				return a;
@@ -122,6 +123,22 @@ public class CustomerDA {
 			System.out.println(e);
 		}
 		return null;
+	}
+
+	public boolean updateCart(CartItem a) {
+		try {
+			pst = db.get().prepareStatement("UPDATE carts SET quantity = ?, sub_total = ? WHERE cart_id = ?");
+			pst.setInt(1, a.getProductQuantity());
+			pst.setDouble(2, a.getSubTotal());
+			pst.setInt(3, a.getId());
+			int x = pst.executeUpdate();
+			if (x != -1) {
+				return true;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return false;
 	}
 
 	public boolean removeFromCart(int id) {
@@ -137,12 +154,12 @@ public class CustomerDA {
 		}
 		return false;
 	}
-	
+
 	public List<CartItem> getCartItems(int customerId) {
 		List<CartItem> list = new ArrayList<>();
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT cart_id, customer_id, product_id, product_name, product_thumbnail_url, product_unit_price, quantity FROM carts WHERE customer_id = ?");
+					"SELECT cart_id, customer_id, product_id, product_name, product_thumbnail_url, product_unit_price, quantity, sub_total FROM carts WHERE customer_id = ?");
 			pst.setInt(1, customerId);
 			ResultSet rs = pst.executeQuery();
 			CartItem p;
@@ -155,6 +172,7 @@ public class CustomerDA {
 				p.setProductThumbnailUrl(rs.getString(5));
 				p.setProductUnitPrice(rs.getDouble(6));
 				p.setProductQuantity(rs.getInt(7));
+				p.setSubTotal(rs.getDouble(8));
 				list.add(p);
 			}
 		} catch (Exception e) {

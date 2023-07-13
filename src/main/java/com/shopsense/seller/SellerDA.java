@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.shopsense.db;
+import com.shopsense.models.Product;
 
 public class SellerDA {
 	PreparedStatement pst;
@@ -29,6 +30,25 @@ public class SellerDA {
 			System.out.println(e);
 		}
 		return seller;
+	}
+	
+	public Seller signup(Seller a) {
+		try {
+			pst = db.get().prepareStatement(
+					"INSERT INTO sellers (name, store_name, office_address, email, role) VALUES (?, ?, ?, ?, ?)");
+			pst.setString(1, a.getName());
+			pst.setString(2, a.getStoreName());
+			pst.setString(3, a.getOfficeAddress());
+			pst.setString(4, a.getEmail());
+			pst.setString(5, a.getRole());
+			int x = pst.executeUpdate();
+			if (x != -1) {
+				return a;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
 	}
 
 	public Product getProduct(int productId) {

@@ -1,4 +1,4 @@
-package com.shopsense.seller;
+package com.shopsense.models;
 
 public class Product {
 	int id;

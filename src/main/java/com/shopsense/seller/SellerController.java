@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopsense.models.Product;
+
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class SellerController {

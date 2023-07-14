@@ -1,34 +1,41 @@
-package com.shopsense.customer;
+package com.shopsense.models;
 
-public class CartItem {
+import java.sql.Date;
+
+public class OrderDetails {
 	int id;
-	int customerId;
+	int orderId;
 	int productId;
 	int sellerId;
 	String storeName;
 	String productName;
-	String productThumbnailUrl;
 	double productUnitPrice;
-	int productQuantity;
+	String productThumbnailUrl;
+	String status;
+	int quantity;
 	double subTotal;
+	Date deliveryDate;
 
-	public CartItem() {
+	public OrderDetails() {
 		super();
 	}
 
-	public CartItem(int id, int customerId, int productId, int sellerId, String storeName, String productName,
-			String productThumbnailUrl, double productUnitPrice, int productQuantity, double subTotal) {
+	public OrderDetails(int id, int orderId, int productId, int sellerId, String storeName, String productName,
+			double productUnitPrice, String productThumbnailUrl, String status, int quantity, double subTotal,
+			Date deliveryDate) {
 		super();
 		this.id = id;
-		this.customerId = customerId;
+		this.orderId = orderId;
 		this.productId = productId;
 		this.sellerId = sellerId;
 		this.storeName = storeName;
 		this.productName = productName;
-		this.productThumbnailUrl = productThumbnailUrl;
 		this.productUnitPrice = productUnitPrice;
-		this.productQuantity = productQuantity;
+		this.productThumbnailUrl = productThumbnailUrl;
+		this.status = status;
+		this.quantity = quantity;
 		this.subTotal = subTotal;
+		this.deliveryDate = deliveryDate;
 	}
 
 	public int getId() {
@@ -39,12 +46,12 @@ public class CartItem {
 		this.id = id;
 	}
 
-	public int getCustomerId() {
-		return customerId;
+	public int getOrderId() {
+		return orderId;
 	}
 
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
 	}
 
 	public int getProductId() {
@@ -79,14 +86,6 @@ public class CartItem {
 		this.productName = productName;
 	}
 
-	public String getProductThumbnailUrl() {
-		return productThumbnailUrl;
-	}
-
-	public void setProductThumbnailUrl(String productThumbnailUrl) {
-		this.productThumbnailUrl = productThumbnailUrl;
-	}
-
 	public double getProductUnitPrice() {
 		return productUnitPrice;
 	}
@@ -95,12 +94,28 @@ public class CartItem {
 		this.productUnitPrice = productUnitPrice;
 	}
 
-	public int getProductQuantity() {
-		return productQuantity;
+	public String getProductThumbnailUrl() {
+		return productThumbnailUrl;
 	}
 
-	public void setProductQuantity(int productQuantity) {
-		this.productQuantity = productQuantity;
+	public void setProductThumbnailUrl(String productThumbnailUrl) {
+		this.productThumbnailUrl = productThumbnailUrl;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	public double getSubTotal() {
@@ -109,5 +124,13 @@ public class CartItem {
 
 	public void setSubTotal(double subTotal) {
 		this.subTotal = subTotal;
+	}
+
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	public void setDeliveryDate(Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
 	}
 }

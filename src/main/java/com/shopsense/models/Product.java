@@ -11,6 +11,7 @@ public class Product {
 	String stockStatus;
 	String stockCount;
 	int sellerId;
+	String storeName;
 	String status;
 
 	public Product() {
@@ -18,7 +19,7 @@ public class Product {
 	}
 
 	public Product(int id, String title, String thumbnailUrl, String description, String regularPrice, String salePrice,
-			String category, String stockStatus, String stockCount, int sellerId, String status) {
+			String category, String stockStatus, String stockCount, int sellerId, String storeName, String status) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -30,6 +31,7 @@ public class Product {
 		this.stockStatus = stockStatus;
 		this.stockCount = stockCount;
 		this.sellerId = sellerId;
+		this.storeName = storeName;
 		this.status = status;
 	}
 
@@ -111,6 +113,14 @@ public class Product {
 
 	public void setSellerId(int sellerId) {
 		this.sellerId = sellerId;
+	}
+
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
 	}
 
 	public String getStatus() {

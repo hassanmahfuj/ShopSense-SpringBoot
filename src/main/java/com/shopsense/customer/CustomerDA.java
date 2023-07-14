@@ -243,8 +243,112 @@ public class CustomerDA {
 				}
 				pst2.executeBatch();
 
+				PreparedStatement pst3 = db.get().prepareStatement("DELETE FROM carts WHERE customer_id = ?");
+				pst3.setInt(1, a.getCustomerId());
+				pst3.executeUpdate();
 				return a;
 			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
+
+	public Order getOrder(int id) {
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT order_id, order_date, order_total, customer_id, discount, shipping_charge, tax, shipping_street, shipping_city, shipping_post_code, shipping_state, shipping_country, status, sub_total, payment_status, payment_method, card_number, card_cvv, card_holder_name, card_expiry_date FROM orders WHERE order_id = ?");
+			pst.setInt(1, id);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				Order a = new Order();
+				a.setId(rs.getInt(1));
+				a.setOrderDate(rs.getDate(2));
+				a.setOrderTotal(rs.getDouble(3));
+				a.setCustomerId(rs.getInt(4));
+				a.setDiscount(rs.getDouble(5));
+				a.setShippingCharge(rs.getDouble(6));
+				a.setTax(rs.getDouble(7));
+				a.setShippingStreet(rs.getString(8));
+				a.setShippingCity(rs.getString(9));
+				a.setShippingPostCode(rs.getString(10));
+				a.setShippingState(rs.getString(11));
+				a.setShippingCountry(rs.getString(12));
+				a.setStatus(rs.getString(13));
+				a.setSubTotal(rs.getDouble(14));
+				a.setPaymentStatus(rs.getString(15));
+				a.setPaymentMethod(rs.getString(16));
+				a.setCardNumber(rs.getString(17));
+				a.setCardCvv(rs.getString(18));
+				a.setCardHolderName(rs.getString(19));
+				a.setCardExpiryDate(rs.getString(20));
+
+				PreparedStatement pst2 = db.get().prepareStatement(
+						"SELECT order_details_id, order_id, product_id, seller_id, store_name, product_name, product_unit_price, product_thumbnail_url, status, quantity, sub_total, delivery_date FROM order_details WHERE order_id = ?");
+				pst2.setInt(1, id);
+				ResultSet rs2 = pst2.executeQuery();
+				List<OrderDetails> orderDetails = new ArrayList<>();
+				OrderDetails o;
+				while (rs2.next()) {
+					o = new OrderDetails();
+					o.setId(rs2.getInt(1));
+					o.setOrderId(rs2.getInt(2));
+					o.setProductId(rs2.getInt(3));
+					o.setSellerId(rs2.getInt(4));
+					o.setStoreName(rs2.getString(5));
+					o.setProductName(rs2.getString(6));
+					o.setProductUnitPrice(rs2.getDouble(7));
+					o.setProductThumbnailUrl(rs2.getString(8));
+					o.setStatus(rs2.getString(9));
+					o.setQuantity(rs2.getInt(10));
+					o.setSubTotal(rs2.getDouble(11));
+					o.setDeliveryDate(rs2.getDate(12));
+					orderDetails.add(o);
+				}
+				a.setOrderDetails(orderDetails);
+				return a;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
+	
+	
+	// get a customers all orders by customer id
+	public List<Order> getOrders(int id) {
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT order_id, order_date, order_total, customer_id, discount, shipping_charge, tax, shipping_street, shipping_city, shipping_post_code, shipping_state, shipping_country, status, sub_total, payment_status, payment_method, card_number, card_cvv, card_holder_name, card_expiry_date FROM orders WHERE customer_id = ? ORDER BY order_id DESC");
+			pst.setInt(1, id);
+			ResultSet rs = pst.executeQuery();
+			List<Order> o = new ArrayList<>();
+			Order a;
+			while (rs.next()) {
+				a = new Order();
+				a.setId(rs.getInt(1));
+				a.setOrderDate(rs.getDate(2));
+				a.setOrderTotal(rs.getDouble(3));
+				a.setCustomerId(rs.getInt(4));
+				a.setDiscount(rs.getDouble(5));
+				a.setShippingCharge(rs.getDouble(6));
+				a.setTax(rs.getDouble(7));
+				a.setShippingStreet(rs.getString(8));
+				a.setShippingCity(rs.getString(9));
+				a.setShippingPostCode(rs.getString(10));
+				a.setShippingState(rs.getString(11));
+				a.setShippingCountry(rs.getString(12));
+				a.setStatus(rs.getString(13));
+				a.setSubTotal(rs.getDouble(14));
+				a.setPaymentStatus(rs.getString(15));
+				a.setPaymentMethod(rs.getString(16));
+				a.setCardNumber(rs.getString(17));
+				a.setCardCvv(rs.getString(18));
+				a.setCardHolderName(rs.getString(19));
+				a.setCardExpiryDate(rs.getString(20));
+				o.add(a);
+			}
+			return o;
 		} catch (Exception e) {
 			System.out.println(e);
 		}

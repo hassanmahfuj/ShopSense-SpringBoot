@@ -9,14 +9,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopsense.models.Order;
+import com.shopsense.models.OrderDetails;
 import com.shopsense.models.Product;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class SellerController {
 
+	SellerDA da = new SellerDA();
+	
 	@PostMapping(value = "/seller/login")
 	public Seller login(@RequestBody Seller a) {
 		SellerDA d = new SellerDA();
@@ -51,5 +56,20 @@ public class SellerController {
 	public boolean deleteProduct(@PathVariable("id") int id) {
 		SellerDA d = new SellerDA();
 		return d.deleteProduct(id);
+	}
+	
+	@GetMapping(value = "/seller/orders")
+	public List<Order> getOrders(@RequestParam int id) {
+		return da.getOrders(id);
+	}
+
+	@GetMapping(value = "/seller/order")
+	public Order getOrder(@RequestParam("orderid") int orderId, @RequestParam("sellerid") int sellerId) {
+		return da.getOrder(orderId, sellerId);
+	}
+	
+	@PutMapping(value = "/seller/order")
+	public boolean updateOrder(@RequestBody OrderDetails p) {
+		return da.updateOrder(p);
 	}
 }

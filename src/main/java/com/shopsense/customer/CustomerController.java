@@ -71,4 +71,14 @@ public class CustomerController {
 	public Order placeOrder(@RequestBody Order a) {
 		return da.placeOrder(a);
 	}
+	
+	@GetMapping(value = "/customer/orders")
+	public List<Order> getOrders(@RequestParam int id) {
+		return da.getOrders(id);
+	}
+	
+	@GetMapping(value = "/customer/order")
+	public Order getOrder(@RequestParam int id) {
+		return da.getOrder(id);
+	}
 }

@@ -176,7 +176,7 @@ public class SellerDA {
 	public List<Order> getOrders(int id) {
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT DISTINCT order_id, order_date, order_total, customer_id, discount, shipping_charge, tax, shipping_street, shipping_city, shipping_post_code, shipping_state, shipping_country, orders.status, orders.sub_total, payment_status, payment_method, card_number, card_cvv, card_holder_name, card_expiry_date FROM orders JOIN order_details USING(order_id) WHERE seller_id = ? ORDER BY order_id DESC");
+					"SELECT DISTINCT order_id, order_date, order_total, customer_id, discount, shipping_charge, tax, shipping_street, shipping_city, shipping_post_code, shipping_state, shipping_country, orders.status, orders.sub_total, payment_status, payment_method, card_number, card_cvv, card_holder_name, card_expiry_date, gateway_fee FROM orders JOIN order_details USING(order_id) WHERE seller_id = ? ORDER BY order_id DESC");
 			pst.setInt(1, id);
 			ResultSet rs = pst.executeQuery();
 			List<Order> o = new ArrayList<>();
@@ -203,6 +203,7 @@ public class SellerDA {
 				a.setCardCvv(rs.getString(18));
 				a.setCardHolderName(rs.getString(19));
 				a.setCardExpiryDate(rs.getString(20));
+				a.setGatewayFee(rs.getDouble(21));
 				o.add(a);
 			}
 			return o;
@@ -216,7 +217,7 @@ public class SellerDA {
 	public Order getOrder(int orderId, int sellerId) {
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT order_id, order_date, order_total, customer_id, discount, shipping_charge, tax, shipping_street, shipping_city, shipping_post_code, shipping_state, shipping_country, status, sub_total, payment_status, payment_method, card_number, card_cvv, card_holder_name, card_expiry_date FROM orders WHERE order_id = ?");
+					"SELECT order_id, order_date, order_total, customer_id, discount, shipping_charge, tax, shipping_street, shipping_city, shipping_post_code, shipping_state, shipping_country, status, sub_total, payment_status, payment_method, card_number, card_cvv, card_holder_name, card_expiry_date, gateway_fee FROM orders WHERE order_id = ?");
 			pst.setInt(1, orderId);
 			ResultSet rs = pst.executeQuery();
 			if (rs.next()) {
@@ -241,6 +242,7 @@ public class SellerDA {
 				a.setCardCvv(rs.getString(18));
 				a.setCardHolderName(rs.getString(19));
 				a.setCardExpiryDate(rs.getString(20));
+				a.setGatewayFee(rs.getDouble(21));
 
 				PreparedStatement pst2 = db.get().prepareStatement(
 						"SELECT order_details_id, order_id, product_id, seller_id, store_name, product_name, product_unit_price, product_thumbnail_url, status, quantity, sub_total, delivery_date FROM order_details WHERE order_id = ? AND seller_id = ?");

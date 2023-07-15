@@ -24,6 +24,7 @@ public class Order {
 	String cardCvv;
 	String cardHolderName;
 	String cardExpiryDate;
+	double gatewayFee;
 	List<OrderDetails> orderDetails;
 
 	public Order() {
@@ -33,7 +34,7 @@ public class Order {
 	public Order(int id, Date orderDate, double orderTotal, int customerId, double discount, double shippingCharge,
 			double tax, String shippingStreet, String shippingCity, String shippingPostCode, String shippingState,
 			String shippingCountry, String status, double subTotal, String paymentStatus, String paymentMethod,
-			String cardNumber, String cardCvv, String cardHolderName, String cardExpiryDate,
+			String cardNumber, String cardCvv, String cardHolderName, String cardExpiryDate, double gatewayFee,
 			List<OrderDetails> orderDetails) {
 		super();
 		this.id = id;
@@ -56,6 +57,7 @@ public class Order {
 		this.cardCvv = cardCvv;
 		this.cardHolderName = cardHolderName;
 		this.cardExpiryDate = cardExpiryDate;
+		this.gatewayFee = gatewayFee;
 		this.orderDetails = orderDetails;
 	}
 
@@ -217,6 +219,14 @@ public class Order {
 
 	public void setCardExpiryDate(String cardExpiryDate) {
 		this.cardExpiryDate = cardExpiryDate;
+	}
+
+	public double getGatewayFee() {
+		return gatewayFee;
+	}
+
+	public void setGatewayFee(double gatewayFee) {
+		this.gatewayFee = gatewayFee;
 	}
 
 	public List<OrderDetails> getOrderDetails() {

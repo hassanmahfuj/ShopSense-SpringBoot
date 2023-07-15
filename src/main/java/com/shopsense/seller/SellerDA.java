@@ -37,12 +37,13 @@ public class SellerDA {
 	public Seller signup(Seller a) {
 		try {
 			pst = db.get().prepareStatement(
-					"INSERT INTO sellers (name, store_name, office_address, email, role) VALUES (?, ?, ?, ?, ?)");
+					"INSERT INTO sellers (name, store_name, office_address, email, password, role) VALUES (?, ?, ?, ?, ?, ?)");
 			pst.setString(1, a.getName());
 			pst.setString(2, a.getStoreName());
 			pst.setString(3, a.getOfficeAddress());
 			pst.setString(4, a.getEmail());
-			pst.setString(5, a.getRole());
+			pst.setString(5, a.getPassword());
+			pst.setString(6, a.getRole());
 			int x = pst.executeUpdate();
 			if (x != -1) {
 				return a;
@@ -83,7 +84,7 @@ public class SellerDA {
 		List<Product> list = new ArrayList<>();
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT title, thumbnail_url, description, regular_price, sale_price, category, stock_status, stock_count, status, product_id FROM products WHERE seller_id = ?");
+					"SELECT products.title, thumbnail_url, products.description, regular_price, sale_price, categories.title, stock_status, stock_count, status, product_id FROM products JOIN categories ON category = category_id WHERE seller_id = ?");
 			pst.setInt(1, sellerId);
 			ResultSet rs = pst.executeQuery();
 			Product p;
@@ -175,7 +176,7 @@ public class SellerDA {
 	public List<Order> getOrders(int id) {
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT order_id, order_date, order_total, customer_id, discount, shipping_charge, tax, shipping_street, shipping_city, shipping_post_code, shipping_state, shipping_country, orders.status, orders.sub_total, payment_status, payment_method, card_number, card_cvv, card_holder_name, card_expiry_date FROM orders JOIN order_details USING(order_id) WHERE seller_id = ? ORDER BY order_id DESC");
+					"SELECT DISTINCT order_id, order_date, order_total, customer_id, discount, shipping_charge, tax, shipping_street, shipping_city, shipping_post_code, shipping_state, shipping_country, orders.status, orders.sub_total, payment_status, payment_method, card_number, card_cvv, card_holder_name, card_expiry_date FROM orders JOIN order_details USING(order_id) WHERE seller_id = ? ORDER BY order_id DESC");
 			pst.setInt(1, id);
 			ResultSet rs = pst.executeQuery();
 			List<Order> o = new ArrayList<>();
@@ -283,14 +284,15 @@ public class SellerDA {
 			if (r != -1) {
 				success = true;
 			}
-			
+
 			// checking any order-details table order is processing or not
 			pst = db.get().prepareStatement("SELECT status FROM order_details WHERE order_id = ?");
 			pst.setInt(1, o.getOrderId());
 			ResultSet rs = pst.executeQuery();
 			String status = "Completed";
-			while(rs.next()) {
-				if(rs.getString(1).equals("Processing")) {
+			while (rs.next()) {
+				String s = rs.getString(1);
+				if (s.equals("Pending") || s.equals("Processing") || s.equals("Shipped")) {
 					status = "Processing";
 				}
 			}

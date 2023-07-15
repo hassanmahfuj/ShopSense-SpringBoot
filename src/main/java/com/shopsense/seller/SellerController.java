@@ -28,6 +28,12 @@ public class SellerController {
 		return d.login(a);
 	}
 	
+	@PostMapping(value = "/seller/signup")
+	public Seller signup(@RequestBody Seller a) {
+		SellerDA d = new SellerDA();
+		return d.signup(a);
+	}
+	
 	@GetMapping(value = "/seller/product/{productId}")
 	public Product getProduct(@PathVariable("productId") int productId) {
 		SellerDA d = new SellerDA();

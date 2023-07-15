@@ -17,7 +17,7 @@ public class SellerDA {
 		Seller seller = null;
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT seller_id, name, email, role  FROM sellers WHERE email = ? AND password = ?");
+					"SELECT seller_id, name, store_name, office_address, email, role FROM sellers WHERE email = ? AND password = ?");
 			pst.setString(1, a.getEmail());
 			pst.setString(2, a.getPassword());
 			ResultSet rs = pst.executeQuery();
@@ -25,8 +25,10 @@ public class SellerDA {
 				seller = new Seller();
 				seller.setId(rs.getInt(1));
 				seller.setName(rs.getString(2));
-				seller.setEmail(rs.getString(3));
-				seller.setRole(rs.getString(4));
+				seller.setStoreName(rs.getString(3));
+				seller.setOfficeAddress(rs.getString(4));
+				seller.setEmail(rs.getString(5));
+				seller.setRole(rs.getString(6));
 			}
 		} catch (Exception e) {
 			System.out.println(e);

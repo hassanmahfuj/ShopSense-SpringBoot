@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopsense.models.Order;
+import com.shopsense.models.OrderDetails;
 import com.shopsense.models.Product;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -80,5 +81,10 @@ public class CustomerController {
 	@GetMapping(value = "/customer/order")
 	public Order getOrder(@RequestParam int id) {
 		return da.getOrder(id);
+	}
+	
+	@GetMapping(value = "/customer/track")
+	public OrderDetails trackOrder(@RequestParam int id) {
+		return da.trackOrder(id);
 	}
 }

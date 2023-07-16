@@ -18,7 +18,7 @@ public class CustomerDA {
 		Customer customer = null;
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT customer_id, name, email, role  FROM customers WHERE email = ? AND password = ?");
+					"SELECT customer_id, name, email, role, address FROM customers WHERE email = ? AND password = ?");
 			pst.setString(1, a.getEmail());
 			pst.setString(2, a.getPassword());
 			ResultSet rs = pst.executeQuery();
@@ -28,6 +28,7 @@ public class CustomerDA {
 				customer.setName(rs.getString(2));
 				customer.setEmail(rs.getString(3));
 				customer.setRole(rs.getString(4));
+				customer.setAddress(rs.getString(5));
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -352,6 +353,34 @@ public class CustomerDA {
 				o.add(a);
 			}
 			return o;
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
+	
+	public OrderDetails trackOrder(int id) {
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT order_details_id, order_id, product_id, seller_id, store_name, product_name, product_unit_price, product_thumbnail_url, status, quantity, sub_total, delivery_date FROM order_details WHERE order_details_id = ?");
+			pst.setInt(1, id);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				OrderDetails a = new OrderDetails();
+				a.setId(rs.getInt(1));
+				a.setOrderId(rs.getInt(2));
+				a.setProductId(rs.getInt(3));
+				a.setSellerId(rs.getInt(4));
+				a.setStoreName(rs.getString(5));
+				a.setProductName(rs.getString(6));
+				a.setProductUnitPrice(rs.getDouble(7));
+				a.setProductThumbnailUrl(rs.getString(8));
+				a.setStatus(rs.getString(9));
+				a.setQuantity(rs.getInt(10));
+				a.setSubTotal(rs.getDouble(11));
+				a.setDeliveryDate(rs.getDate(12));
+				return a;
+			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}

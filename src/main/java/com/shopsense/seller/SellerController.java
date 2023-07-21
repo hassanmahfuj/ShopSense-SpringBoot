@@ -34,6 +34,11 @@ public class SellerController {
 		return d.signup(a);
 	}
 	
+	@GetMapping(value = "/seller/{sellerId}")
+	public Seller getSeller(@PathVariable("sellerId") int sellerId) {
+		return da.getSeller(sellerId);
+	}
+	
 	@GetMapping(value = "/seller/product/{productId}")
 	public Product getProduct(@PathVariable("productId") int productId) {
 		SellerDA d = new SellerDA();

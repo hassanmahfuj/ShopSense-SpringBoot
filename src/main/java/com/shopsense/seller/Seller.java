@@ -1,20 +1,25 @@
 package com.shopsense.seller;
 
 public class Seller {
-	int id;
-	String name;
-	String storeName;
-	String officeAddress;
-	String email;
-	String password;
-	String role;
+	private int id;
+	private String name;
+	private String storeName;
+	private String officeAddress;
+	private String email;
+	private String password;
+	private String role;
+	private double balance;
+	private String holderName;
+	private String accountNumber;
+	private String bankName;
+	private String branchName;
 
 	public Seller() {
 		super();
 	}
 
 	public Seller(int id, String name, String storeName, String officeAddress, String email, String password,
-			String role) {
+			String role, double balance, String holderName, String accountNumber, String bankName, String branchName) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -23,6 +28,11 @@ public class Seller {
 		this.email = email;
 		this.password = password;
 		this.role = role;
+		this.balance = balance;
+		this.holderName = holderName;
+		this.accountNumber = accountNumber;
+		this.bankName = bankName;
+		this.branchName = branchName;
 	}
 
 	public int getId() {
@@ -80,4 +90,45 @@ public class Seller {
 	public void setRole(String role) {
 		this.role = role;
 	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
+	public String getHolderName() {
+		return holderName;
+	}
+
+	public void setHolderName(String holderName) {
+		this.holderName = holderName;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	public String getBranchName() {
+		return branchName;
+	}
+
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
+	}
+
 }

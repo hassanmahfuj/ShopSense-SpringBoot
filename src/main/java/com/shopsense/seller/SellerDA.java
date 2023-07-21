@@ -56,6 +56,31 @@ public class SellerDA {
 		}
 		return null;
 	}
+	
+	public Seller getSeller(int id) {
+		Seller seller = null;
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT name, store_name, office_address, email, balance, holder_name, account_number, bank_name, branch_name FROM sellers WHERE seller_id = ?");
+			pst.setInt(1, id);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				seller = new Seller();
+				seller.setName(rs.getString(1));
+				seller.setStoreName(rs.getString(2));
+				seller.setOfficeAddress(rs.getString(3));
+				seller.setEmail(rs.getString(4));
+				seller.setBalance(rs.getInt(5));
+				seller.setHolderName(rs.getString(6));
+				seller.setAccountNumber(rs.getString(7));
+				seller.setBankName(rs.getString(8));
+				seller.setBranchName(rs.getString(9));
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return seller;
+	}
 
 	public Product getProduct(int productId) {
 		Product p = null;

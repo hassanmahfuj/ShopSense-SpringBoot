@@ -9,6 +9,7 @@ import com.shopsense.db;
 import com.shopsense.models.Order;
 import com.shopsense.models.OrderDetails;
 import com.shopsense.models.Product;
+import com.shopsense.models.RevenueProfit;
 
 public class SellerDA {
 	PreparedStatement pst;
@@ -300,11 +301,44 @@ public class SellerDA {
 					status = "Processing";
 				}
 			}
+
 			// update main order table status
 			pst = db.get().prepareStatement("UPDATE orders SET status = ? WHERE order_id = ?");
 			pst.setString(1, status);
 			pst.setInt(2, o.getOrderId());
 			pst.executeUpdate();
+
+			// if the orderDetails is delivered then update revenueProfit
+			if (o.getStatus().equals("Delivered")) {
+				RevenueProfit rp = new RevenueProfit();
+				rp.setSellerId(o.getSellerId());
+				rp.setOrderId(o.getOrderId());
+				rp.setDeliveryDate(o.getDeliveryDate());
+				rp.setOrderDetailsId(o.getId());
+				rp.setRevenue(o.getSubTotal());
+				rp.setCosts(0);
+				rp.setPlatformProfit(rp.getRevenue() * .02); // 2% platform commission
+				rp.setSellerProfit(rp.getRevenue() - (rp.getCosts() + rp.getPlatformProfit()));
+
+				pst = db.get().prepareStatement(
+						"INSERT INTO revenue_profit (seller_id, order_id, order_date, order_details_id, revenue, costs, platform_profit, seller_profit) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+				pst.setInt(1, rp.getSellerId());
+				pst.setInt(2, rp.getOrderId());
+				pst.setDate(3, rp.getDeliveryDate());
+				pst.setInt(4, rp.getOrderDetailsId());
+				pst.setDouble(5, rp.getRevenue());
+				pst.setDouble(6, rp.getCosts());
+				pst.setDouble(7, rp.getPlatformProfit());
+				pst.setDouble(8, rp.getSellerProfit());
+				pst.executeUpdate();
+
+				// then update seller account balance
+				pst = db.get().prepareStatement("UPDATE sellers SET balance = balance + ? WHERE seller_id = ?");
+				pst.setDouble(1, rp.getSellerProfit());
+				pst.setInt(2, rp.getSellerId());
+				pst.executeUpdate();
+			}
+
 		} catch (Exception e) {
 			System.out.println(e);
 		}

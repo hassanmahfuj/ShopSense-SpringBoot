@@ -70,7 +70,7 @@ public class WithdrawalDA {
 		List<WithdrawalAdmin> withdrawals = new ArrayList<>();
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT sw_id, seller_id, store_name, holder_name, account_number, bank_name, branch_name, request_date, amount, payment_date, status FROM seller_withdrawals JOIN sellers USING(seller_id) ORDER BY sw_id DESC");
+					"SELECT sw_id, seller_id, store_name, holder_name, account_number, bank_name, branch_name, request_date, amount, payment_date, seller_withdrawals.status FROM seller_withdrawals JOIN sellers USING(seller_id) ORDER BY sw_id DESC");
 			ResultSet rs = pst.executeQuery();
 			WithdrawalAdmin w;
 			while (rs.next()) {

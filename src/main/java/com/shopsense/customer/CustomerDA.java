@@ -197,6 +197,7 @@ public class CustomerDA {
 					"INSERT INTO orders (order_date, order_total, customer_id, discount, shipping_charge, tax, shipping_street, shipping_city, shipping_post_code, shipping_state, shipping_country, status, sub_total, payment_status, payment_method, card_number, card_cvv, card_holder_name, card_expiry_date, gateway_fee) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 			pst.setDate(1, a.getOrderDate());
+//			pst.setDate(1, new Date(System.currentTimeMillis()));
 			pst.setDouble(2, a.getOrderTotal());
 			pst.setInt(3, a.getCustomerId());
 			pst.setDouble(4, a.getDiscount());

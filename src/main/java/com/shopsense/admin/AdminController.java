@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopsense.customer.Customer;
 import com.shopsense.models.Product;
 import com.shopsense.seller.Seller;
 
@@ -41,5 +42,15 @@ public class AdminController {
 	@PutMapping(value = "/admin/seller")
 	public Seller updateSeller(@RequestBody Seller a) {
 		return da.updateSeller(a);
+	}
+
+	@GetMapping(value = "/admin/customers")
+	public List<Customer> getAllCustomers() {
+		return da.getAllCustomers();
+	}
+
+	@PutMapping(value = "/admin/customer")
+	public Customer updateCustomer(@RequestBody Customer a) {
+		return da.updateCustomer(a);
 	}
 }

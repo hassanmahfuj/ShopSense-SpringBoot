@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.shopsense.db;
+import com.shopsense.customer.Customer;
 import com.shopsense.models.Product;
 import com.shopsense.seller.Seller;
 
@@ -116,5 +117,40 @@ public class AdminDA {
 		return null;
 	}
 	
+	public List<Customer> getAllCustomers() {
+		List<Customer> list = new ArrayList<>();
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT customer_id, name, email, status FROM customers");
+			ResultSet rs = pst.executeQuery();
+			Customer a;
+			while (rs.next()) {
+				a = new Customer();
+				a.setId(rs.getInt("customer_id"));
+				a.setName(rs.getString("name"));
+				a.setEmail(rs.getString("email"));
+				a.setStatus(rs.getString("status"));
+				list.add(a);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return list;
+	}
 	
+	public Customer updateCustomer(Customer a) {
+		try {
+			pst = db.get().prepareStatement(
+					"UPDATE customers SET status = ? WHERE customer_id = ?");
+			pst.setString(1, a.getStatus());
+			pst.setInt(2, a.getId());
+			int x = pst.executeUpdate();
+			if (x != -1) {
+				return a;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
 }

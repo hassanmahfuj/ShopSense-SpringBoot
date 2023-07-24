@@ -14,7 +14,7 @@ public class CouponDA {
 		Coupon c = null;
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT coupon_id, coupon_code, coupon_value, coupon_type FROM coupons WHERE coupon_code = ?");
+					"SELECT coupon_id, coupon_code, coupon_value, coupon_type FROM coupons WHERE coupon_code = ? AND status = 'Active'");
 			pst.setString(1, code);
 			ResultSet rs = pst.executeQuery();
 			if (rs.next()) {

@@ -59,7 +59,7 @@ public class CustomerDA {
 		Product p = null;
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT product_id, title, thumbnail_url, description, regular_price, sale_price, category, stock_status, stock_count, seller_id, store_name, status FROM products JOIN sellers USING(seller_id) WHERE product_id = ?");
+					"SELECT product_id, title, thumbnail_url, description, regular_price, sale_price, category, stock_status, stock_count, seller_id, store_name, products.status FROM products JOIN sellers USING(seller_id) WHERE product_id = ?");
 			pst.setInt(1, productId);
 			ResultSet rs = pst.executeQuery();
 			while (rs.next()) {
@@ -87,7 +87,9 @@ public class CustomerDA {
 		List<Product> list = new ArrayList<>();
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT product_id, title, thumbnail_url, description, regular_price, sale_price, category, stock_status, stock_count, status FROM products");
+					"SELECT product_id, title, thumbnail_url, description, regular_price, sale_price, category, stock_status, stock_count, products.status "
+					+ "FROM products JOIN sellers USING(seller_id)"
+					+ "WHERE products.status = 'Active' AND sellers.status = 'Active'");
 			ResultSet rs = pst.executeQuery();
 			Product p;
 			while (rs.next()) {

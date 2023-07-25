@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.shopsense.db;
+import com.shopsense.report.dto.SalesReportDto;
 
 public class ReportDA {
 
@@ -170,5 +171,32 @@ public class ReportDA {
 			System.out.println(e);
 		}
 		return a;
+	}
+
+	public List<SalesReportDto> getSellerSalesReport(int sellerId, String startDate, String endDate) {
+		List<SalesReportDto> l = new ArrayList<>();
+		SalesReportDto a;
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT order_date, COUNT(*), SUM(revenue), SUM(revenue)-SUM(seller_profit), SUM(seller_profit) FROM revenue_profit WHERE seller_id = ? AND order_date BETWEEN ? AND ? GROUP BY order_date ORDER BY order_date");
+			pst.setInt(1, sellerId);
+			pst.setString(2, startDate);
+			pst.setString(3, endDate);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				a = new SalesReportDto();
+				a.setDate(rs.getString(1));
+				a.setItems(rs.getInt(2));
+				a.setRevenue(rs.getDouble(3));
+				a.setCosts(rs.getDouble(4));
+				a.setProfit(rs.getDouble(5));
+				l.add(a);
+			}
+			rs.close();
+			pst.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return l;
 	}
 }

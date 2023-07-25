@@ -156,7 +156,7 @@ public class ReportDA {
 
 			// getting total revenue, total profit
 			pst = db.get().prepareStatement(
-					"SELECT SUM(revenue), SUM(platform_profit) FROM revenue_profit WHERE seller_id = ?");
+					"SELECT SUM(revenue), SUM(seller_profit) FROM revenue_profit WHERE seller_id = ?");
 			pst.setInt(1, sellerId);
 			rs = pst.executeQuery();
 			while (rs.next()) {

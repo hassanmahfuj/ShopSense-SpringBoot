@@ -18,7 +18,7 @@ public class CustomerDA {
 		Customer customer = null;
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT customer_id, name, email, role, address FROM customers WHERE email = ? AND password = ?");
+					"SELECT customer_id, name, email, role, address FROM customers WHERE email = ? AND password = ? AND status = 'Active'");
 			pst.setString(1, a.getEmail());
 			pst.setString(2, a.getPassword());
 			ResultSet rs = pst.executeQuery();

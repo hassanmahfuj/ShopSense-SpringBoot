@@ -18,7 +18,7 @@ public class SellerDA {
 		Seller seller = null;
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT seller_id, name, store_name, office_address, email, role FROM sellers WHERE email = ? AND password = ?");
+					"SELECT seller_id, name, store_name, office_address, email, role FROM sellers WHERE email = ? AND password = ? AND status = 'Active'");
 			pst.setString(1, a.getEmail());
 			pst.setString(2, a.getPassword());
 			ResultSet rs = pst.executeQuery();

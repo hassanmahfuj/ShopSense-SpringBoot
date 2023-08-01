@@ -1,0 +1,20 @@
+package com.shopsense.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class Customer {
+	int id;
+	String name;
+	String email;
+	String password;
+	String role;
+	String address;
+	String status;
+}

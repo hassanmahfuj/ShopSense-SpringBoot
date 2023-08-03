@@ -33,4 +33,9 @@ public class ReportController {
 			@RequestParam String endDate) {
 		return da.getSellerSalesReport(sellerId, startDate, endDate);
 	}
+
+	@GetMapping(value = "/admin/report/sales")
+	public List<SalesReportDto> getAdminSalesReport(@RequestParam String startDate, @RequestParam String endDate) {
+		return da.getAdminSalesReport(startDate, endDate);
+	}
 }

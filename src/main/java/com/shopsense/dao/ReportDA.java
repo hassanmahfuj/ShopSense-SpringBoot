@@ -201,4 +201,29 @@ public class ReportDA {
 		}
 		return l;
 	}
+	
+	public List<SalesReportDto> getAdminSalesReport(String startDate, String endDate) {
+		List<SalesReportDto> l = new ArrayList<>();
+		SalesReportDto a;
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT order_date, COUNT(*), SUM(revenue), SUM(platform_profit) FROM revenue_profit WHERE order_date BETWEEN ? AND ? GROUP BY order_date ORDER BY order_date");
+			pst.setString(1, startDate);
+			pst.setString(2, endDate);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				a = new SalesReportDto();
+				a.setDate(rs.getString(1));
+				a.setItems(rs.getInt(2));
+				a.setRevenue(rs.getDouble(3));
+				a.setProfit(rs.getDouble(4));
+				l.add(a);
+			}
+			rs.close();
+			pst.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return l;
+	}
 }

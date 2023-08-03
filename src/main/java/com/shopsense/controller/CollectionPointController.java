@@ -32,13 +32,11 @@ public class CollectionPointController {
 
 	@GetMapping
 	public List<CollectionPoint> readAllCollectionPoint() {
-		System.out.println("default");
 		return cps.readAllCollectionPoint();
 	}
 
 	@GetMapping("/search")
 	public List<CollectionPoint> readByDistrict(@RequestParam String district) {
-		System.out.println("param");
 		return cps.readByDistrict(district);
 	}
 

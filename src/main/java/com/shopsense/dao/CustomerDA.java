@@ -90,8 +90,8 @@ public class CustomerDA {
 		try {
 			pst = db.get().prepareStatement(
 					"SELECT product_id, title, thumbnail_url, description, regular_price, sale_price, category, stock_status, stock_count, products.status "
-					+ "FROM products JOIN sellers USING(seller_id)"
-					+ "WHERE products.status = 'Active' AND sellers.status = 'Active'");
+							+ "FROM products JOIN sellers USING(seller_id)"
+							+ "WHERE products.status = 'Active' AND sellers.status = 'Active'");
 			ResultSet rs = pst.executeQuery();
 			Product p;
 			while (rs.next()) {
@@ -321,8 +321,7 @@ public class CustomerDA {
 		}
 		return null;
 	}
-	
-	
+
 	// get a customers all orders by customer id
 	public List<Order> getOrders(int id) {
 		try {
@@ -363,7 +362,7 @@ public class CustomerDA {
 		}
 		return null;
 	}
-	
+
 	public OrderDetails trackOrder(int id) {
 		try {
 			pst = db.get().prepareStatement(
@@ -390,5 +389,27 @@ public class CustomerDA {
 			System.out.println(e);
 		}
 		return null;
+	}
+
+	public boolean isProductPurchased(int customerId, int productId) {
+		try {
+			pst = db.get().prepareStatement("""
+						SELECT COUNT(*)
+						FROM order_details
+						JOIN orders USING(order_id)
+						WHERE product_id = ? AND customer_id = ?
+					""");
+			pst.setInt(1, productId);
+			pst.setInt(2, customerId);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				if(rs.getInt(1) > 0) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return false;
 	}
 }

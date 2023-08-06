@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopsense.dto.WishlistDetail;
 import com.shopsense.entity.Wishlist;
 import com.shopsense.service.WishlistService;
 
@@ -38,7 +39,7 @@ public class WishlistController {
 	}
 
 	@GetMapping
-	public List<Wishlist> findAllByCustomerId(@RequestParam int customerId) {
+	public List<WishlistDetail> findAllByCustomerId(@RequestParam int customerId) {
 		return ws.findAllByCustomerId(customerId);
 	}
 }

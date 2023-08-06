@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shopsense.dao.WishlistDA;
+import com.shopsense.dto.WishlistDetail;
 import com.shopsense.entity.Wishlist;
 import com.shopsense.repository.WishlistRepository;
 
@@ -13,6 +15,9 @@ public class WishlistService {
 
 	@Autowired
 	WishlistRepository wr;
+	
+	@Autowired
+	WishlistDA da;
 
 	public boolean addToWishlist(Wishlist wishlist) {
 		wr.save(wishlist);
@@ -28,7 +33,7 @@ public class WishlistService {
 		return wr.existsByCustomerIdAndProductId(wishlist.getCustomerId(), wishlist.getProductId());
 	}
 
-	public List<Wishlist> findAllByCustomerId(int customerId) {
-		return wr.findAllByCustomerId(customerId);
+	public List<WishlistDetail> findAllByCustomerId(int customerId) {
+		return da.findAllByCustomerId(customerId);
 	}
 }

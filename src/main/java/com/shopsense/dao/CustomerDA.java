@@ -412,4 +412,34 @@ public class CustomerDA {
 		}
 		return false;
 	}
+
+	public List<Product> searchProducts(String q) {
+		List<Product> list = new ArrayList<>();
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT product_id, title, thumbnail_url, description, regular_price, sale_price, category, stock_status, stock_count, products.status "
+							+ "FROM products JOIN sellers USING(seller_id)"
+							+ "WHERE products.status = 'Active' AND sellers.status = 'Active' AND title LIKE ?");
+			pst.setString(1, "%".concat(q).concat("%"));
+			ResultSet rs = pst.executeQuery();
+			Product p;
+			while (rs.next()) {
+				p = new Product();
+				p.setId(rs.getInt(1));
+				p.setTitle(rs.getString(2));
+				p.setThumbnailUrl(rs.getString(3));
+				p.setDescription(rs.getString(4));
+				p.setRegularPrice(rs.getString(5));
+				p.setSalePrice(rs.getString(6));
+				p.setCategory(rs.getString(7));
+				p.setStockStatus(rs.getString(8));
+				p.setStockCount(rs.getString(9));
+				p.setStatus(rs.getString(10));
+				list.add(p);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return list;
+	}
 }

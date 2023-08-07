@@ -95,4 +95,9 @@ public class CustomerController {
 	public boolean isProductPurchased(@RequestParam int customerId, @RequestParam int productId) {
 		return da.isProductPurchased(customerId, productId);
 	}
+	
+	@GetMapping(value = "/search")
+	public List<Product> searchProducts(@RequestParam String q) {
+		return da.searchProducts(q);
+	}
 }

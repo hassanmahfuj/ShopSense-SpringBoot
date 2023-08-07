@@ -5,6 +5,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.shopsense.db;
 import com.shopsense.model.Admin;
 import com.shopsense.model.Customer;
@@ -13,9 +16,14 @@ import com.shopsense.model.OrderDetails;
 import com.shopsense.model.Product;
 import com.shopsense.model.RevenueProfit;
 import com.shopsense.model.Seller;
+import com.shopsense.service.EmailService;
 
+@Service
 public class AdminDA {
 	PreparedStatement pst;
+	
+	@Autowired
+	EmailService mailer;
 
 	public Admin login(Admin a) {
 		Admin admin = null;
@@ -35,6 +43,8 @@ public class AdminDA {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		System.out.println(a.getEmail());
+		mailer.sendEmail(a.getEmail(), "Login notification", "You are logged in");
 		return admin;
 	}
 

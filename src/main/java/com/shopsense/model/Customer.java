@@ -17,4 +17,5 @@ public class Customer {
 	String role;
 	String address;
 	String status;
+	boolean emailVerified;
 }

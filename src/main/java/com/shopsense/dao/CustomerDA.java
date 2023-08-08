@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,30 @@ public class CustomerDA {
 			System.out.println(e);
 		}
 		return null;
+	}
+
+	public Customer getCustomer(int customerId) {
+		Customer p = null;
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT customer_id, name, email, password, role, address, status, email_verified FROM customers WHERE customer_id = ?");
+			pst.setInt(1, customerId);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				p = new Customer();
+				p.setId(rs.getInt(1));
+				p.setName(rs.getString(2));
+				p.setEmail(rs.getString(3));
+				p.setPassword(null);
+				p.setRole(rs.getString(5));
+				p.setAddress(rs.getString(6));
+				p.setStatus(rs.getString(7));
+				p.setEmailVerified(rs.getBoolean(8));
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return p;
 	}
 
 	public Product getProduct(int productId) {
@@ -271,7 +296,7 @@ public class CustomerDA {
 					orderDetailString.append("<td>" + o.getSubTotal() + "</td>");
 					orderDetailString.append("</tr>");
 				}
-				
+
 				String customerEmail = String.format("""
 						<html>
 						<head>
@@ -315,7 +340,7 @@ public class CustomerDA {
 						</body>
 						</html>
 						""", orderDetailString.toString());
-				
+
 				String sellerEmail = String.format("""
 						<html>
 						<head>
@@ -359,7 +384,7 @@ public class CustomerDA {
 						</body>
 						</html>
 						""", orderDetailString.toString());
-				
+
 				mailer.sendContentEmail("humahfuj@gmail.com", "Order Placed", customerEmail);
 				mailer.sendContentEmail("humahfuj@gmail.com", "New Order", sellerEmail);
 				return a;
@@ -550,5 +575,54 @@ public class CustomerDA {
 			System.out.println(e);
 		}
 		return list;
+	}
+
+	public boolean sendVerificationCode(Customer a) {
+		try {
+			Random random = new Random();
+			int randomCode = random.nextInt(999999 - 100000 + 1) + 100000;
+
+			pst = db.get().prepareStatement("DELETE FROM verification_code WHERE user_id = ?");
+			pst.setInt(1, a.getId());
+			pst.executeUpdate();
+
+			pst = db.get().prepareStatement("INSERT INTO verification_code (user_id, code) VALUES (?, ?)");
+			pst.setInt(1, a.getId());
+			pst.setInt(2, randomCode);
+			pst.executeUpdate();
+
+			mailer.sendContentEmail("humahfuj@gmail.com", "Verification Code",
+					"<h2>Verification code is : " + String.valueOf(randomCode) + "</h2>");
+
+			return true;
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return false;
+	}
+
+	public boolean verifyCode(int userId, int code) {
+		try {
+			pst = db.get().prepareStatement("SELECT * FROM verification_code WHERE user_id = ? AND code = ?");
+			pst.setInt(1, userId);
+			pst.setInt(2, code);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				mailer.sendContentEmail("humahfuj@gmail.com", "Email Verified",
+						"<h2>Email verification is complete</h2>");
+
+				pst = db.get().prepareStatement("DELETE FROM verification_code WHERE user_id = ?");
+				pst.setInt(1, userId);
+				pst.executeUpdate();
+
+				pst = db.get().prepareStatement("UPDATE customers SET email_verified = true WHERE customer_id = ?");
+				pst.setInt(1, userId);
+				pst.executeUpdate();
+				return true;
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return false;
 	}
 }

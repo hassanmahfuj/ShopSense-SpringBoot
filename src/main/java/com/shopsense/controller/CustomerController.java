@@ -39,6 +39,11 @@ public class CustomerController {
 		return d.signup(a);
 	}
 
+	@GetMapping(value = "/customer/{customerId}")
+	public Customer getCustomer(@PathVariable int customerId) {
+		return da.getCustomer(customerId);
+	}
+
 	@GetMapping(value = "/customer/product/{productId}")
 	public Product getProduct(@PathVariable("productId") int productId) {
 		CustomerDA d = new CustomerDA();
@@ -97,9 +102,19 @@ public class CustomerController {
 	public boolean isProductPurchased(@RequestParam int customerId, @RequestParam int productId) {
 		return da.isProductPurchased(customerId, productId);
 	}
-	
+
 	@GetMapping(value = "/search")
 	public List<Product> searchProducts(@RequestParam String q) {
 		return da.searchProducts(q);
+	}
+
+	@PostMapping(value = "/customer/send-code")
+	public boolean sendVerificationCode(@RequestBody Customer a) {
+		return da.sendVerificationCode(a);
+	}
+
+	@GetMapping(value = "/customer/verify-code")
+	public boolean verifyCode(@RequestParam int userId, @RequestParam int code) {
+		return da.verifyCode(userId, code);
 	}
 }

@@ -3,6 +3,7 @@ package com.shopsense.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.Message;
@@ -17,7 +18,8 @@ public class EmailService {
 	@Autowired
 	JavaMailSender mailer;
 
-	public boolean sendEmail(String to, String subject, String body) {
+	@Async
+	public void sendEmail(String to, String subject, String body) {
 		SimpleMailMessage m = new SimpleMailMessage();
 		m.setFrom("humarchive1@gmail.com");
 		m.setTo(to);
@@ -25,10 +27,10 @@ public class EmailService {
 		m.setText(body);
 
 		mailer.send(m);
-		return true;
 	}
 
-	public boolean sendContentEmail(String to, String subject, String body) {
+	@Async
+	public void sendContentEmail(String to, String subject, String body) {
 		MimeMessage m = mailer.createMimeMessage();
 		try {
 			m.setFrom("humarchive1@gmail.com");
@@ -41,6 +43,5 @@ public class EmailService {
 			e.printStackTrace();
 		}
 		mailer.send(m);
-		return true;
 	}
 }

@@ -6,15 +6,23 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.shopsense.db;
 import com.shopsense.model.CartItem;
 import com.shopsense.model.Customer;
 import com.shopsense.model.Order;
 import com.shopsense.model.OrderDetails;
 import com.shopsense.model.Product;
+import com.shopsense.service.EmailService;
 
+@Service
 public class CustomerDA {
 	PreparedStatement pst;
+
+	@Autowired
+	EmailService mailer;
 
 	public Customer login(Customer a) {
 		Customer customer = null;
@@ -253,6 +261,107 @@ public class CustomerDA {
 				PreparedStatement pst3 = db.get().prepareStatement("DELETE FROM carts WHERE customer_id = ?");
 				pst3.setInt(1, a.getCustomerId());
 				pst3.executeUpdate();
+
+				// send email
+				StringBuilder orderDetailString = new StringBuilder();
+				for (OrderDetails o : orderDetails) {
+					orderDetailString.append("<tr>");
+					orderDetailString.append("<td>" + o.getProductName() + "</td>");
+					orderDetailString.append("<td>" + o.getQuantity() + "</td>");
+					orderDetailString.append("<td>" + o.getSubTotal() + "</td>");
+					orderDetailString.append("</tr>");
+				}
+				
+				String customerEmail = String.format("""
+						<html>
+						<head>
+						<style>
+							.header {
+								width: 400px;
+								background-color: #04AA6D;
+								color: white;
+								padding: 10px 20px;
+							}
+							table {
+							  border-collapse: collapse;
+							  width: 400px;
+							}
+
+							td, th {
+							  border: 1px solid #ddd;
+							  padding: 8px;
+							}
+
+							th {
+							  padding-top: 12px;
+							  padding-bottom: 12px;
+							  text-align: left;
+							  background-color: #04AA6D;
+							  color: white;
+							}
+						</style>
+						</head>
+						<body>
+							<h1 class="header">Order Placed</h1>
+							<p>Your order is placed successfully. The order is as follows:</p>
+							<table>
+								<tr>
+									<th>Product</th>
+									<th>Quantity</th>
+									<th>Price</th>
+								</tr>
+								%s
+							</table>
+						</body>
+						</html>
+						""", orderDetailString.toString());
+				
+				String sellerEmail = String.format("""
+						<html>
+						<head>
+						<style>
+							.header {
+								width: 400px;
+								background-color: #04AA6D;
+								color: white;
+								padding: 10px 20px;
+							}
+							table {
+							  border-collapse: collapse;
+							  width: 400px;
+							}
+
+							td, th {
+							  border: 1px solid #ddd;
+							  padding: 8px;
+							}
+
+							th {
+							  padding-top: 12px;
+							  padding-bottom: 12px;
+							  text-align: left;
+							  background-color: #04AA6D;
+							  color: white;
+							}
+						</style>
+						</head>
+						<body>
+							<h1 class="header">New Order</h1>
+							<p>You got a new order. The order is as follows:</p>
+							<table>
+								<tr>
+									<th>Product</th>
+									<th>Quantity</th>
+									<th>Price</th>
+								</tr>
+								%s
+							</table>
+						</body>
+						</html>
+						""", orderDetailString.toString());
+				
+				mailer.sendContentEmail("humahfuj@gmail.com", "Order Placed", customerEmail);
+				mailer.sendContentEmail("humahfuj@gmail.com", "New Order", sellerEmail);
 				return a;
 			}
 		} catch (Exception e) {
@@ -403,7 +512,7 @@ public class CustomerDA {
 			pst.setInt(2, customerId);
 			ResultSet rs = pst.executeQuery();
 			if (rs.next()) {
-				if(rs.getInt(1) > 0) {
+				if (rs.getInt(1) > 0) {
 					return true;
 				}
 			}

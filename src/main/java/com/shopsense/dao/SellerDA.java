@@ -5,15 +5,23 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.shopsense.db;
 import com.shopsense.model.Order;
 import com.shopsense.model.OrderDetails;
 import com.shopsense.model.Product;
 import com.shopsense.model.RevenueProfit;
 import com.shopsense.model.Seller;
+import com.shopsense.service.EmailService;
 
+@Service
 public class SellerDA {
 	PreparedStatement pst;
+
+	@Autowired
+	EmailService mailer;
 
 	public Seller login(Seller a) {
 		Seller seller = null;
@@ -57,7 +65,7 @@ public class SellerDA {
 		}
 		return null;
 	}
-	
+
 	public Seller getSeller(int id) {
 		Seller seller = null;
 		try {
@@ -364,6 +372,10 @@ public class SellerDA {
 				pst.setInt(2, rp.getSellerId());
 				pst.executeUpdate();
 			}
+
+			mailer.sendContentEmail("humahfuj@gmail.com", "Order Status Changed",
+					"<h1>Update of your order status</h1>"
+					+ "<h2>Your order #" + o.getOrderId() + " is now " + o.getStatus() + "</h2>");
 
 		} catch (Exception e) {
 			System.out.println(e);

@@ -2,6 +2,7 @@ package com.shopsense.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,8 @@ import com.shopsense.model.Product;
 @RestController
 public class CustomerController {
 
-	CustomerDA da = new CustomerDA();
+	@Autowired
+	CustomerDA da;
 
 	@PostMapping(value = "/customer/login")
 	public Customer login(@RequestBody Customer a) {

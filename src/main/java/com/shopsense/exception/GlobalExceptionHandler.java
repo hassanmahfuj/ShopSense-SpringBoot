@@ -13,7 +13,8 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity<HashMap<String, String>> handleAllException(Exception e) {
 		HashMap<String, String> m = new HashMap<>();
-		m.put("status", e.toString());
+		m.put("status", "error");
+		m.put("message", e.toString());
 		return new ResponseEntity<HashMap<String, String>>(m, HttpStatus.OK);
 	}
 }

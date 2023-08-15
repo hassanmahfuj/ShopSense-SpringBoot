@@ -17,7 +17,7 @@ public class AuthService {
 
 	@Autowired
 	JwtService jwtService;
-	
+
 	@Autowired
 	AdminDA adminDA;
 
@@ -25,6 +25,7 @@ public class AuthService {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(a.getEmail(), a.getPassword()));
 		var user = adminDA.findByEmail(a.getEmail());
 		var token = jwtService.generateToken(user);
-		return AuthResponse.builder().token(token).user(user).build();
+		user.setPassword(null);
+		return AuthResponse.builder().status("success").token(token).user(user).build();
 	}
 }

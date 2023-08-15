@@ -30,7 +30,7 @@ public class AdminDA {
 	public Admin findByEmail(String email) throws UsernameNotFoundException {
 		Admin admin = null;
 		try {
-			pst = db.get().prepareStatement("SELECT admin_id, name, email, role  FROM admins WHERE email = ?");
+			pst = db.get().prepareStatement("SELECT admin_id, name, email, role, password FROM admins WHERE email = ?");
 			pst.setString(1, email);
 			ResultSet rs = pst.executeQuery();
 			if (rs.next()) {
@@ -39,6 +39,7 @@ public class AdminDA {
 				admin.setName(rs.getString(2));
 				admin.setEmail(rs.getString(3));
 				admin.setRole(Role.valueOf(rs.getString(4)));
+				admin.setPassword(rs.getString(5));
 			} else {
 				throw new UsernameNotFoundException("User not found");
 			}

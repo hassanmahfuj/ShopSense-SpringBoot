@@ -3,7 +3,6 @@ package com.shopsense.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,7 +18,7 @@ public class SecurityConfig {
 	JwtAuthFilter jwtAuthFilter;
 	
 	@Autowired
-	AuthenticationProvider authenticationProvider;
+	AuthProvider authProvider;
 	
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,7 +27,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/admin/login").permitAll()
 						.anyRequest().authenticated())
-				.authenticationProvider(authenticationProvider)
+				.authenticationProvider(authProvider)
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}

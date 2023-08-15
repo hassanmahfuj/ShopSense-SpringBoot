@@ -12,23 +12,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopsense.dao.AdminDA;
-import com.shopsense.model.Admin;
+import com.shopsense.dto.AuthRequest;
+import com.shopsense.dto.AuthResponse;
 import com.shopsense.model.Customer;
 import com.shopsense.model.Order;
 import com.shopsense.model.OrderDetails;
 import com.shopsense.model.Product;
 import com.shopsense.model.Seller;
+import com.shopsense.service.AuthService;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class AdminController {
-	
+
 	@Autowired
 	AdminDA da;
 
+	@Autowired
+	AuthService authService;
+
 	@PostMapping(value = "/admin/login")
-	public Admin login(@RequestBody Admin a) {
-		return da.login(a);
+	public AuthResponse login(@RequestBody AuthRequest a) {
+		return authService.login(a);
 	}
 
 	@GetMapping(value = "/admin/products")
@@ -60,7 +65,7 @@ public class AdminController {
 	public Customer updateCustomer(@RequestBody Customer a) {
 		return da.updateCustomer(a);
 	}
-	
+
 	@GetMapping(value = "/admin/orders")
 	public List<Order> getOrders() {
 		return da.getOrders();
@@ -70,12 +75,12 @@ public class AdminController {
 	public Order getOrder(@RequestParam("orderid") int orderId) {
 		return da.getOrder(orderId);
 	}
-	
+
 	@PutMapping(value = "/admin/order")
 	public boolean updateOrder(@RequestBody OrderDetails p) {
 		return da.updateOrder(p);
 	}
-	
+
 	@GetMapping(value = "/admin/orders/shipped")
 	public List<Order> getShippedOrders() {
 		return da.getShippedOrders();

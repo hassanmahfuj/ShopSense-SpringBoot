@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.shopsense.db;
@@ -15,36 +16,35 @@ import com.shopsense.model.Order;
 import com.shopsense.model.OrderDetails;
 import com.shopsense.model.Product;
 import com.shopsense.model.RevenueProfit;
+import com.shopsense.model.Role;
 import com.shopsense.model.Seller;
 import com.shopsense.service.EmailService;
 
 @Service
 public class AdminDA {
 	PreparedStatement pst;
-	
+
 	@Autowired
 	EmailService mailer;
-
-	public Admin login(Admin a) {
+	
+	public Admin findByEmail(String email) throws UsernameNotFoundException {
 		Admin admin = null;
 		try {
-			pst = db.get().prepareStatement(
-					"SELECT admin_id, name, email, role  FROM admins WHERE email = ? AND password = ?");
-			pst.setString(1, a.getEmail());
-			pst.setString(2, a.getPassword());
+			pst = db.get().prepareStatement("SELECT admin_id, name, email, role  FROM admins WHERE email = ?");
+			pst.setString(1, email);
 			ResultSet rs = pst.executeQuery();
 			if (rs.next()) {
 				admin = new Admin();
 				admin.setId(rs.getInt(1));
 				admin.setName(rs.getString(2));
 				admin.setEmail(rs.getString(3));
-				admin.setRole(rs.getString(4));
+				admin.setRole(Role.valueOf(rs.getString(4)));
+			} else {
+				throw new UsernameNotFoundException("User not found");
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		System.out.println(a.getEmail());
-		mailer.sendEmail(a.getEmail(), "Login notification", "You are logged in");
 		return admin;
 	}
 

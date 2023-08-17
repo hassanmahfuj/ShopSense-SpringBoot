@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopsense.dao.SellerDA;
+import com.shopsense.dto.AuthRequest;
+import com.shopsense.dto.AuthResponse;
 import com.shopsense.model.Order;
 import com.shopsense.model.OrderDetails;
 import com.shopsense.model.Product;
 import com.shopsense.model.Seller;
+import com.shopsense.service.AuthService;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -25,11 +28,13 @@ public class SellerController {
 
 	@Autowired
 	SellerDA da;
+
+	@Autowired
+	AuthService authService;
 	
 	@PostMapping(value = "/seller/login")
-	public Seller login(@RequestBody Seller a) {
-		SellerDA d = new SellerDA();
-		return d.login(a);
+	public AuthResponse login(@RequestBody AuthRequest a) {
+		return authService.sellerLogin(a);
 	}
 	
 	@PostMapping(value = "/seller/signup")

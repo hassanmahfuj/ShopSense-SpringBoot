@@ -12,12 +12,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.shopsense.dao.AdminDA;
+import com.shopsense.dao.CustomerDA;
+import com.shopsense.dao.SellerDA;
 
 @Configuration
 public class ApplicationConfig {
 	
 	@Autowired
 	AdminDA adminDA;
+	
+	@Autowired
+	CustomerDA customerDA;
+	
+	@Autowired
+	SellerDA sellerDA;
 	
 	@Bean
 	AuthProvider authProvider() {
@@ -30,7 +38,15 @@ public class ApplicationConfig {
 		return new UserDetailsService() {
 			@Override
 			public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-				return adminDA.findByEmail(username);
+				UserDetails u = null;
+				u = adminDA.findByEmail(username);
+				if(u == null) {
+					u = customerDA.findByEmail(username);
+				}
+				if(u == null) {
+					u = sellerDA.findByEmail(username);
+				}
+				return u;
 			}
 		};
 	}

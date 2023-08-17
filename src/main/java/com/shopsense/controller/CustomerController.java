@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopsense.dao.CustomerDA;
+import com.shopsense.dto.AuthRequest;
+import com.shopsense.dto.AuthResponse;
 import com.shopsense.model.CartItem;
 import com.shopsense.model.Customer;
 import com.shopsense.model.Order;
 import com.shopsense.model.OrderDetails;
 import com.shopsense.model.Product;
+import com.shopsense.service.AuthService;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -26,11 +29,13 @@ public class CustomerController {
 
 	@Autowired
 	CustomerDA da;
+	
+	@Autowired
+	AuthService authService;
 
 	@PostMapping(value = "/customer/login")
-	public Customer login(@RequestBody Customer a) {
-		CustomerDA d = new CustomerDA();
-		return d.login(a);
+	public AuthResponse login(@RequestBody AuthRequest a) {
+		return authService.customerLogin(a);
 	}
 
 	@PostMapping(value = "/customer/signup")
@@ -44,13 +49,13 @@ public class CustomerController {
 		return da.getCustomer(customerId);
 	}
 
-	@GetMapping(value = "/customer/product/{productId}")
+	@GetMapping(value = "/product/{productId}")
 	public Product getProduct(@PathVariable("productId") int productId) {
 		CustomerDA d = new CustomerDA();
 		return d.getProduct(productId);
 	}
 
-	@GetMapping(value = "/customer/products")
+	@GetMapping(value = "/products")
 	public List<Product> getProducts() {
 		CustomerDA d = new CustomerDA();
 		return d.getProducts();

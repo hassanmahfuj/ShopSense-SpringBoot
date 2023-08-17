@@ -40,8 +40,23 @@ public class SecurityConfig {
 				.cors(Customizer.withDefaults())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/admin/login").permitAll()
+						.requestMatchers(
+								"/admin/login",
+								"/seller/login",
+								"/seller/signup",
+								"/customer/login",
+								"/customer/signup"
+						).permitAll()
 						.requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
+						.requestMatchers("/seller/**").hasAuthority(Role.SELLER.name())
+						.requestMatchers("/customer/**").hasAuthority(Role.CUSTOMER.name())
+						.requestMatchers(
+								"/coupon/check",
+								"/collectionpoint/search",
+								"/upload",
+								"/uploads/**",
+								"/**"
+						).permitAll()
 						.anyRequest().authenticated())
 				.authenticationProvider(authProvider)
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

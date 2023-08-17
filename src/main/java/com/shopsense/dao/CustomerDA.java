@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.shopsense.db;
@@ -16,6 +17,7 @@ import com.shopsense.model.Customer;
 import com.shopsense.model.Order;
 import com.shopsense.model.OrderDetails;
 import com.shopsense.model.Product;
+import com.shopsense.model.Role;
 import com.shopsense.service.EmailService;
 
 @Service
@@ -25,6 +27,30 @@ public class CustomerDA {
 	@Autowired
 	EmailService mailer;
 
+	public Customer findByEmail(String email) throws UsernameNotFoundException {
+		Customer customer = null;
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT customer_id, name, email, role, address, password FROM customers WHERE email = ? AND status = 'Active'");
+			pst.setString(1, email);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				customer = new Customer();
+				customer.setId(rs.getInt(1));
+				customer.setName(rs.getString(2));
+				customer.setEmail(rs.getString(3));
+				customer.setRole(Role.valueOf(rs.getString(4)));
+				customer.setAddress(rs.getString(5));
+				customer.setPassword(rs.getString(6));
+			} else {
+				throw new UsernameNotFoundException("User not found");
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return customer;
+	}
+	
 	public Customer login(Customer a) {
 		Customer customer = null;
 		try {
@@ -38,7 +64,7 @@ public class CustomerDA {
 				customer.setId(rs.getInt(1));
 				customer.setName(rs.getString(2));
 				customer.setEmail(rs.getString(3));
-				customer.setRole(rs.getString(4));
+				customer.setRole(Role.valueOf(rs.getString(4)));
 				customer.setAddress(rs.getString(5));
 			}
 		} catch (Exception e) {
@@ -54,7 +80,7 @@ public class CustomerDA {
 			pst.setString(1, a.getName());
 			pst.setString(2, a.getEmail());
 			pst.setString(3, a.getPassword());
-			pst.setString(4, a.getRole());
+			pst.setString(4, a.getRole().name());
 			pst.setString(5, a.getAddress());
 			int x = pst.executeUpdate();
 			if (x != -1) {
@@ -79,7 +105,7 @@ public class CustomerDA {
 				p.setName(rs.getString(2));
 				p.setEmail(rs.getString(3));
 				p.setPassword(null);
-				p.setRole(rs.getString(5));
+				p.setRole(Role.valueOf(rs.getString(5)));
 				p.setAddress(rs.getString(6));
 				p.setStatus(rs.getString(7));
 				p.setEmailVerified(rs.getBoolean(8));

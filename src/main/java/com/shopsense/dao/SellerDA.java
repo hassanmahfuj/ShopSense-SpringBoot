@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.shopsense.db;
@@ -13,6 +14,7 @@ import com.shopsense.model.Order;
 import com.shopsense.model.OrderDetails;
 import com.shopsense.model.Product;
 import com.shopsense.model.RevenueProfit;
+import com.shopsense.model.Role;
 import com.shopsense.model.Seller;
 import com.shopsense.service.EmailService;
 
@@ -22,6 +24,31 @@ public class SellerDA {
 
 	@Autowired
 	EmailService mailer;
+	
+	public Seller findByEmail(String email) throws UsernameNotFoundException {
+		Seller seller = null;
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT seller_id, name, store_name, office_address, email, role, password FROM sellers WHERE email = ? AND status = 'Active'");
+			pst.setString(1, email);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				seller = new Seller();
+				seller.setId(rs.getInt(1));
+				seller.setName(rs.getString(2));
+				seller.setStoreName(rs.getString(3));
+				seller.setOfficeAddress(rs.getString(4));
+				seller.setEmail(rs.getString(5));
+				seller.setRole(Role.valueOf(rs.getString(6)));
+				seller.setPassword(rs.getString(7));
+			} else {
+				throw new UsernameNotFoundException("User not found");
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return seller;
+	}
 
 	public Seller login(Seller a) {
 		Seller seller = null;
@@ -38,7 +65,7 @@ public class SellerDA {
 				seller.setStoreName(rs.getString(3));
 				seller.setOfficeAddress(rs.getString(4));
 				seller.setEmail(rs.getString(5));
-				seller.setRole(rs.getString(6));
+				seller.setRole(Role.valueOf(rs.getString(6)));
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -55,7 +82,7 @@ public class SellerDA {
 			pst.setString(3, a.getOfficeAddress());
 			pst.setString(4, a.getEmail());
 			pst.setString(5, a.getPassword());
-			pst.setString(6, a.getRole());
+			pst.setString(6, a.getRole().name());
 			int x = pst.executeUpdate();
 			if (x != -1) {
 				return a;
@@ -70,7 +97,7 @@ public class SellerDA {
 		Seller seller = null;
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT name, store_name, office_address, email, balance, holder_name, account_number, bank_name, branch_name FROM sellers WHERE seller_id = ?");
+					"SELECT name, store_name, office_address, email, balance, holder_name, account_number, bank_name, branch_name, role FROM sellers WHERE seller_id = ?");
 			pst.setInt(1, id);
 			ResultSet rs = pst.executeQuery();
 			if (rs.next()) {
@@ -84,6 +111,7 @@ public class SellerDA {
 				seller.setAccountNumber(rs.getString(7));
 				seller.setBankName(rs.getString(8));
 				seller.setBranchName(rs.getString(9));
+				seller.setRole(Role.valueOf(rs.getString(10)));
 			}
 		} catch (Exception e) {
 			System.out.println(e);

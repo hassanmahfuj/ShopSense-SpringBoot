@@ -29,7 +29,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
-//		Enumeration<String> headerNames = request.getHeaderNames();
+//		java.util.Enumeration<String> headerNames = request.getHeaderNames();
 //		while (headerNames.hasMoreElements()) {
 //			String headerName = headerNames.nextElement();
 //			String headerValue = request.getHeader(headerName);

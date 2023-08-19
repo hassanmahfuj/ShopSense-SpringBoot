@@ -279,11 +279,11 @@ public class AdminDA {
 			pst = db.get().prepareStatement("SELECT status FROM order_details WHERE order_id = ?");
 			pst.setInt(1, o.getOrderId());
 			ResultSet rs = pst.executeQuery();
-			String status = "Completed";
+			String status = "Processing";
 			while (rs.next()) {
 				String s = rs.getString(1);
-				if (s.equals("Pending") || s.equals("Processing") || s.equals("Shipped")) {
-					status = "Processing";
+				if (s.equals("Canceled") || s.equals("Delivered") || s.equals("Refunded")) {
+					status = "Completed";
 				}
 			}
 

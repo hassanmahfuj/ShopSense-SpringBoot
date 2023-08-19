@@ -63,6 +63,7 @@ public class AdminController {
 
 	@PutMapping(value = "/admin/customer")
 	public Customer updateCustomer(@RequestBody Customer a) {
+		System.out.println(a);
 		return da.updateCustomer(a);
 	}
 

@@ -95,7 +95,7 @@ public class AdminDA {
 	public List<Seller> getAllSellers() {
 		List<Seller> list = new ArrayList<>();
 		try {
-			pst = db.get().prepareStatement("SELECT seller_id, name, email, store_name, balance, status FROM sellers");
+			pst = db.get().prepareStatement("SELECT seller_id, name, email, store_name, balance, status, role FROM sellers");
 			ResultSet rs = pst.executeQuery();
 			Seller a;
 			while (rs.next()) {
@@ -106,6 +106,7 @@ public class AdminDA {
 				a.setStoreName(rs.getString("store_name"));
 				a.setBalance(rs.getDouble("balance"));
 				a.setStatus(rs.getString("status"));
+				a.setRole(Role.valueOf(rs.getString("role")));
 				list.add(a);
 			}
 		} catch (Exception e) {
@@ -132,7 +133,7 @@ public class AdminDA {
 	public List<Customer> getAllCustomers() {
 		List<Customer> list = new ArrayList<>();
 		try {
-			pst = db.get().prepareStatement("SELECT customer_id, name, email, status FROM customers");
+			pst = db.get().prepareStatement("SELECT customer_id, name, email, status, role FROM customers");
 			ResultSet rs = pst.executeQuery();
 			Customer a;
 			while (rs.next()) {
@@ -141,6 +142,7 @@ public class AdminDA {
 				a.setName(rs.getString("name"));
 				a.setEmail(rs.getString("email"));
 				a.setStatus(rs.getString("status"));
+				a.setRole(Role.valueOf(rs.getString("role")));
 				list.add(a);
 			}
 		} catch (Exception e) {
@@ -151,6 +153,7 @@ public class AdminDA {
 
 	public Customer updateCustomer(Customer a) {
 		try {
+			System.out.println(a);
 			pst = db.get().prepareStatement("UPDATE customers SET status = ? WHERE customer_id = ?");
 			pst.setString(1, a.getStatus());
 			pst.setInt(2, a.getId());

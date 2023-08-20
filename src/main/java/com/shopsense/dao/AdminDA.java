@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.shopsense.db;
+import com.shopsense.dto.StatusUpdate;
 import com.shopsense.model.Admin;
 import com.shopsense.model.Customer;
 import com.shopsense.model.Order;
@@ -115,7 +116,7 @@ public class AdminDA {
 		return list;
 	}
 
-	public Seller updateSeller(Seller a) {
+	public StatusUpdate updateSeller(StatusUpdate a) {
 		try {
 			pst = db.get().prepareStatement("UPDATE sellers SET status = ? WHERE seller_id = ?");
 			pst.setString(1, a.getStatus());
@@ -151,9 +152,8 @@ public class AdminDA {
 		return list;
 	}
 
-	public Customer updateCustomer(Customer a) {
+	public StatusUpdate updateCustomer(StatusUpdate a) {
 		try {
-			System.out.println(a);
 			pst = db.get().prepareStatement("UPDATE customers SET status = ? WHERE customer_id = ?");
 			pst.setString(1, a.getStatus());
 			pst.setInt(2, a.getId());

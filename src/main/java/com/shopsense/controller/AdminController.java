@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shopsense.dao.AdminDA;
 import com.shopsense.dto.AuthRequest;
 import com.shopsense.dto.AuthResponse;
+import com.shopsense.dto.StatusUpdate;
 import com.shopsense.model.Customer;
 import com.shopsense.model.Order;
 import com.shopsense.model.OrderDetails;
@@ -52,7 +53,7 @@ public class AdminController {
 	}
 
 	@PutMapping(value = "/admin/seller")
-	public Seller updateSeller(@RequestBody Seller a) {
+	public StatusUpdate updateSeller(@RequestBody StatusUpdate a) {
 		return da.updateSeller(a);
 	}
 
@@ -62,8 +63,7 @@ public class AdminController {
 	}
 
 	@PutMapping(value = "/admin/customer")
-	public Customer updateCustomer(@RequestBody Customer a) {
-		System.out.println(a);
+	public StatusUpdate updateCustomer(@RequestBody StatusUpdate a) {
 		return da.updateCustomer(a);
 	}
 

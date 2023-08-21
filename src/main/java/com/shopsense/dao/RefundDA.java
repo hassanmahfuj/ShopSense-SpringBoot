@@ -93,4 +93,31 @@ public class RefundDA {
 		}
 		return l;
 	}
+	
+	public List<RefundDetails> getSellerRefund(int sellerId) {
+		List<RefundDetails> l = new ArrayList<>();
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT refund_id, r.order_id, r.order_details_id, r.seller_id, reason, bank_number, bank_name, amount, status FROM refund_history r JOIN order_details USING(order_details_id) WHERE r.seller_id = ? ORDER BY refund_id DESC");
+			pst.setInt(1, sellerId);
+			rs = pst.executeQuery();
+			RefundDetails rd;
+			while (rs.next()) {
+				rd = new RefundDetails();
+				rd.setRefundId(rs.getInt(1));
+				rd.setOrderId(rs.getInt(2));
+				rd.setOrderDetailsId(rs.getInt(3));
+				rd.setSellerId(rs.getInt(4));
+				rd.setReason(rs.getString(5));
+				rd.setBankNumber(rs.getString(6));
+				rd.setBankName(rs.getString(7));
+				rd.setAmount(rs.getDouble(8));
+				rd.setStatus(rs.getString(9));
+				l.add(rd);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return l;
+	}
 }

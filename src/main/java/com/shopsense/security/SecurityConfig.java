@@ -55,6 +55,7 @@ public class SecurityConfig {
 								"/collectionpoint/search",
 								"/upload",
 								"/uploads/**",
+								"/reports/**",
 								"/**"
 						).permitAll()
 						.anyRequest().authenticated())

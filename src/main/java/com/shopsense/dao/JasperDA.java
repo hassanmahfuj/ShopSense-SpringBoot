@@ -258,4 +258,57 @@ public class JasperDA {
 		}
 		return l;
 	}
+	
+	public HashMap<String, Object> getInvoiceByOrderId(int id) {
+		HashMap<String, Object> map = new HashMap<>();
+		List<HashMap<String, String>> l = new ArrayList<>();
+		HashMap<String, String> m;
+		
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT order_id, order_date, order_total, customer_id, discount, shipping_charge, tax, shipping_street, shipping_city, shipping_post_code, shipping_state, shipping_country, status, sub_total, payment_status, payment_method, card_number, card_cvv, card_holder_name, card_expiry_date, gateway_fee FROM orders WHERE order_id = ?");
+			pst.setInt(1, id);
+			rs = pst.executeQuery();
+			if (rs.next()) {
+				map.put("id", rs.getString(1));
+				map.put("street", rs.getString("shipping_street"));
+				map.put("city", rs.getString("shipping_city"));
+				map.put("state", rs.getString("shipping_state"));
+				map.put("subTotal", rs.getString("sub_total"));
+				map.put("gatewayFee", rs.getString("gateway_fee"));
+				map.put("shippingCharge", rs.getString("shipping_charge"));
+				map.put("discount", rs.getString("discount"));
+				map.put("tax", rs.getString("tax"));
+				map.put("orderTotal", rs.getString("order_total"));
+			}
+			rs.close();
+			pst.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		try {
+			pst = db.get().prepareStatement(
+					"SELECT order_details_id, order_id, product_id, seller_id, store_name, product_name, product_unit_price, product_thumbnail_url, status, quantity, sub_total, delivery_date FROM order_details WHERE order_id = ?");
+			pst.setInt(1, id);
+			rs = pst.executeQuery();
+			int serial = 1;
+			while (rs.next()) {
+				m = new HashMap<>();
+				m.put("serial", String.valueOf(serial++));
+				m.put("productName", rs.getString("product_name"));
+				m.put("unitPrice", rs.getString("product_unit_price"));
+				m.put("qty", rs.getString("quantity"));
+				m.put("subTotal", rs.getString("sub_total"));
+				l.add(m);
+			}
+			map.put("items", l);
+			rs.close();
+			pst.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		return map;
+	}
 }

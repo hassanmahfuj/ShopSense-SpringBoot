@@ -211,4 +211,37 @@ public class JasperController {
 		}
 		return null;
 	}
+	
+	@GetMapping(value = "/reports/invoice", produces = MediaType.APPLICATION_PDF_VALUE)
+	public ResponseEntity<byte[]> getInvoiceByOrderId(@RequestParam int id) {
+		try {
+			HashMap<String, Object> m = da.getInvoiceByOrderId(id);
+			@SuppressWarnings("unchecked")
+			List<HashMap<String, String>> items = (List<HashMap<String, String>>) m.get("items");
+			
+			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(items, false);
+			Map<String, Object> param = new HashMap<>();
+			param.put("id", m.get("id"));
+			param.put("street", m.get("street"));
+			param.put("city", m.get("city"));
+			param.put("state", m.get("state"));
+			param.put("subTotal", m.get("subTotal"));
+			param.put("gatewayFee", m.get("gatewayFee"));
+			param.put("shippingCharge", m.get("shippingCharge"));
+			param.put("discount", m.get("discount"));
+			param.put("tax", m.get("tax"));
+			param.put("orderTotal", m.get("orderTotal"));
+			
+			JasperReport compileReport = JasperCompileManager
+					.compileReport(new FileInputStream("src/main/resources/jasper/Invoice.jrxml"));
+			JasperPrint jasperPrint = JasperFillManager.fillReport(compileReport, param, dataSource);
+			byte[] data = JasperExportManager.exportReportToPdf(jasperPrint);
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Disposition", "inline; filename=citiesreport.pdf");
+			return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF).body(data);
+		} catch (FileNotFoundException | JRException e) {
+			System.out.println(e);
+		}
+		return null;
+	}
 }

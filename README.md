@@ -6,7 +6,7 @@
 
 This guide will walk you through the steps to install and set up a Spring Boot project using Spring Tool Suite (STS).
 
-### Prerequisites
+## Prerequisites
 
 Before you begin, ensure that you have the following installed on your system:
 
@@ -15,15 +15,17 @@ Before you begin, ensure that you have the following installed on your system:
 * Git (optional, for version control)
 * Internet connection (for downloading dependencies)
 
-### Step 1: Clone the Project
+## Step 1: Clone the Project
 
 1. Open a terminal window.
 2. Navigate to the directory where you want to store your project.
 3. Clone the project repository using the following command:
-   
-  `git clone https://github.com/hassanmahfuj/ShopSense-SpringBoot.git`
 
-### Step 2: Import Project into STS
+```
+git clone https://github.com/hassanmahfuj/ShopSense-SpringBoot.git
+```
+
+## Step 2: Import Project into STS
 
 1. Open Spring Tool Suite.
 2. Click on `File` > `Import`.
@@ -31,7 +33,7 @@ Before you begin, ensure that you have the following installed on your system:
 4. Browse and select the root directory of the cloned project.
 5. Ensure that the `pom.xml` file is selected and click `Finish`.
 
-### Step 3: Build and Run the Project
+## Step 3: Build and Run the Project
 
 1. Once the project is imported, right-click on the project in the Project Explorer.
 2. Select `Run As` > `Spring Boot App`.

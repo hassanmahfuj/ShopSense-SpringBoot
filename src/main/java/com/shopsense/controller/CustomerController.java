@@ -23,7 +23,7 @@ import com.shopsense.model.OrderDetails;
 import com.shopsense.model.Product;
 import com.shopsense.service.AuthService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 public class CustomerController {
 

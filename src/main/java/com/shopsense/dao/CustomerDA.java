@@ -148,7 +148,7 @@ public class CustomerDA {
 		List<Product> list = new ArrayList<>();
 		try {
 			pst = db.get().prepareStatement(
-					"SELECT product_id, title, thumbnail_url, description, regular_price, sale_price, category, stock_status, stock_count, products.status "
+					"SELECT product_id, title, thumbnail_url, description, regular_price, sale_price, category, stock_status, stock_count, products.status, seller_id, store_name "
 							+ "FROM products JOIN sellers USING(seller_id)"
 							+ "WHERE products.status = 'Active' AND sellers.status = 'Active'");
 			ResultSet rs = pst.executeQuery();
@@ -165,6 +165,8 @@ public class CustomerDA {
 				p.setStockStatus(rs.getString(8));
 				p.setStockCount(rs.getString(9));
 				p.setStatus(rs.getString(10));
+				p.setSellerId(rs.getInt(11));
+				p.setStoreName(rs.getString(12));
 				list.add(p);
 			}
 		} catch (Exception e) {
